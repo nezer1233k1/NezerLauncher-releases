@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NezerLauncher: лаунчер для Minecraft Java</title>
+<meta name="description" content="Лаунчер для Minecraft Java: моды с Modrinth, скины, свой сервер и профили в одном окне. Бесплатно, для Windows.">
+<meta name="theme-color" content="#2f6bff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NezerLauncher">
+<meta property="og:description" content="Лаунчер для Minecraft Java: моды, скины и свой сервер в одном окне.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f6bff'/%3E%3Cpath d='M10 23V9l12 14V9' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<style>
+:root{--deep:#0f1420;--panel:#151b2b;--edge:#26304a;--snow:#eef3fb;--mute:#8d9ab5;--sky:#5fd4ff;--blue:#2f6bff;--blue2:#1f4fd8;--err:#ff7a7a;--ok:#6ee7a8;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.6 "Segoe UI Variable","Segoe UI",system-ui,sans-serif;color:var(--snow);min-height:100vh;
+background:radial-gradient(900px 520px at 90% -10%,rgba(47,107,255,.22),transparent 60%),radial-gradient(700px 500px at -5% 110%,rgba(95,212,255,.12),transparent 60%),var(--deep)}
+a{color:var(--sky)}
+:focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+.w{max-width:1040px;margin:0 auto;padding:0 24px}
+header .w{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--snow);text-decoration:none}
+.brand svg{width:30px;height:30px}
+nav{display:flex;gap:22px;font-size:14.5px}
+nav a{color:var(--mute);text-decoration:none}nav a:hover{color:var(--snow)}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:64px 0 72px}
+h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.02em}
+.lead{margin-top:18px;font-size:19px;color:var(--mute);max-width:30em}
+.dl{margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;font-size:18px;padding:15px 30px;border:0;border-radius:12px;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn:hover{background:var(--blue2)}
+.btn.ghost{background:transparent;border:1px solid var(--edge);color:var(--snow);font-size:15px;padding:10px 18px}
+.btn.ghost:hover{border-color:var(--sky);background:transparent}
+.btn[disabled]{opacity:.5;cursor:wait}
+.meta{margin-top:14px;color:var(--mute);font-size:14.5px}
+.meta b{font-family:Consolas,"Cascadia Mono",monospace;color:var(--sky);font-weight:600}
+.alt{margin-top:6px;font-size:14px}
+.win{display:grid;grid-template-columns:56px 1fr;height:310px;border:1px solid var(--edge);border-radius:16px;background:rgba(21,27,43,.85);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.side{border-right:1px solid var(--edge);padding:18px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.side i{width:24px;height:24px;border-radius:7px;background:var(--edge)}.side i:first-child{background:var(--blue)}
+.main{padding:24px;display:flex;flex-direction:column;gap:4px}
+.main small{color:var(--mute)}.main strong{font-size:22px}
+.main .chips{display:flex;gap:8px;margin-top:10px}
+.main .chips span{border:1px solid var(--edge);border-radius:99px;padding:3px 12px;font-size:13px;color:var(--mute)}
+.play{margin-top:auto;align-self:flex-start;background:var(--blue);border-radius:10px;padding:12px 38px;font-weight:700}
+section.blk{padding:56px 0;border-top:1px solid var(--edge)}
+h2{font-size:26px;letter-spacing:-.01em;margin-bottom:22px}
+dl{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 56px}
+dt{font-weight:700;margin-bottom:2px}
+dd{color:var(--mute);max-width:26em}
+pre{white-space:pre-wrap;font:inherit;color:var(--mute);max-width:44em}
+footer{border-top:1px solid var(--edge);padding:26px 0 40px;color:var(--mute);font-size:14px}
+footer .w{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+.lnk{background:none;border:0;color:var(--mute);font:inherit;cursor:pointer;text-decoration:underline;padding:0;margin-left:auto}
+.lnk:hover{color:var(--snow)}
+.adm{display:grid;gap:14px;max-width:560px}
+.adm label{display:grid;gap:6px;font-size:14px;color:var(--mute)}
+.adm input,.adm textarea{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:10px 12px;color:var(--snow);font:inherit}
+.adm textarea{min-height:90px;resize:vertical}
+.adm p{color:var(--mute);font-size:14.5px}
+#log{font:13.5px/1.6 Consolas,"Cascadia Mono",monospace;color:var(--mute);white-space:pre-wrap}
+#log .e{color:var(--err)}#log .k{color:var(--ok)}
+select{background:var(--panel);color:var(--snow);border:1px solid var(--edge);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:8px;margin-top:18px;border:1px solid var(--edge);border-radius:99px;padding:6px 14px;font-size:14px;color:var(--snow);text-decoration:none}
+.pill:hover{border-color:var(--sky)}.pill i{width:8px;height:8px;border-radius:50%;background:var(--mute)}.pill.on i{background:var(--ok)}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--blue);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:5}
+nav{align-items:center}
+@media(max-width:820px){#discordTop{display:none}.hero{grid-template-columns:1fr;gap:40px;padding:36px 0 48px}dl{grid-template-columns:1fr}.win{height:240px}nav{gap:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a class="brand" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2f6bff"/><path d="M10 23V9l12 14V9" stroke="#fff" stroke-width="3" fill="none"/></svg>NezerLauncher</a>
+  <nav><a href="#features" data-i18n="nav.feat">Возможности</a><a id="discordTop" href="#" hidden target="_blank" rel="noopener">Discord</a><a id="ghLink" href="#" target="_blank" rel="noopener" data-i18n="nav.all">Все версии</a><select id="lang" aria-label="Language"><option value="ru">Русский</option><option value="uk">Українська</option><option value="pl">Polski</option><option value="en">English</option></select></nav>
+</div></header>
+
+<main>
+<div class="w hero">
+  <div>
+    <h1>NezerLauncher</h1>
+    <p class="lead" data-i18n="lead">Лаунчер для Minecraft Java: моды, скины и свой сервер в одном окне.</p>
+    <div class="dl">
+      <a id="dl" class="btn" href="#" data-i18n="dl">Скачать для Windows</a>
+      <p class="meta" id="meta">Загружаю данные о версии…</p>
+      <p class="alt"><a id="portable" href="#" hidden data-i18n="portable">Портативная версия без установки</a></p>
+      <a id="dsPill" class="pill" href="#" hidden target="_blank" rel="noopener"><i></i><span></span></a>
+    </div>
+  </div>
+  <div class="win" aria-hidden="true">
+    <div class="side"><i></i><i></i><i></i><i></i></div>
+    <div class="main"><small data-i18n="prof">Профиль</small><strong data-i18n="profName">Выживание с модами</strong><div class="chips"><span>Fabric</span><span>1.21</span></div><div class="play" data-i18n="play">Играть</div></div>
+  </div>
+</div>
+
+<div class="w">
+<section class="blk" id="notes" hidden><h2 id="nvh">Что нового</h2><pre id="nb"></pre></section>
+
+<section class="blk" id="features"><h2 data-i18n="featTitle">Что умеет</h2>
+<dl>
+  <div><dt data-i18n="f1t">Аккаунты</dt><dd data-i18n="f1d">Вход через Microsoft или офлайн-профиль. У каждого аккаунта свои миры.</dd></div>
+  <div><dt data-i18n="f2t">Моды</dt><dd data-i18n="f2d">Каталог Modrinth. Нужные зависимости, например Fabric API, ставятся сами. Сборки можно отправить другу кодом.</dd></div>
+  <div><dt data-i18n="f3t">Скины и плащи</dt><dd data-i18n="f3d">Редактор скина, поиск по нику и гардероб, чтобы быстро переключаться.</dd></div>
+  <div><dt data-i18n="f4t">Свой сервер</dt><dd data-i18n="f4d">Создайте сервер Vanilla, Paper или Fabric и откройте его друзьям без VPN.</dd></div>
+  <div><dt data-i18n="f5t">Миры и скриншоты</dt><dd data-i18n="f5d">Резервные копии миров, восстановление в один клик и галерея скриншотов.</dd></div>
+  <div><dt data-i18n="f6t">Обновления и языки</dt><dd data-i18n="f6d">Лаунчер сам находит новую версию. Интерфейс на русском, украинском, польском и английском.</dd></div>
+</dl></section>
+
+<section class="blk" id="admin" hidden><h2>Обновить версию</h2>
+<div class="adm">
+  <div id="auth" class="adm">
+    <p>Только для владельца. Вставьте токен GitHub с правом Contents: Read and write на репозиторий релизов. Токен хранится только в этой вкладке.</p>
+    <label>Токен<input id="tok" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+    <button class="btn ghost" id="login" type="button">Войти</button>
+  </div>
+  <div id="pub" class="adm" hidden>
+    <label>Номер версии<input id="ver" placeholder="1.4.4"></label>
+    <label>Что нового<textarea id="notes2" placeholder="Что изменилось в этой версии"></textarea></label>
+    <label>Файлы из папки dist: установщик .exe, его .blockmap и latest.yml (Portable по желанию)<input id="files" type="file" multiple></label>
+    <button class="btn" id="go" type="button">Опубликовать версию</button>
+  </div>
+  <div id="log" role="status" aria-live="polite"></div>
+</div></section>
+</div>
+</main>
+
+<footer><div class="w">
+  <span data-i18n="foot">NezerLauncher · не связан с Mojang и Microsoft</span>
+  <a id="discordFoot" href="#" hidden target="_blank" rel="noopener" data-i18n="dsFoot">Наш Discord</a>
+  <button class="lnk" id="adminBtn" type="button" data-i18n="adminLink">Вход для администратора</button>
+</div></footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+/* НАСТРОЙКИ: меняйте только здесь */
+const CFG = {
+  owner: 'nezer1233k1',
+  repo: 'NezerLauncher-releases',
+  discord: ''            // ссылка-приглашение, например https://discord.gg/xxxxxx (пусто: кнопки Discord скрыты)
+};
+const $ = s => document.querySelector(s);
+const REPO = CFG.owner + '/' + CFG.repo, API = 'https://api.github.com/repos/' + REPO;
+const REL = 'https://github.com/' + REPO + '/releases/latest';
+const I = {
+ru: { 'nav.feat':'Возможности','nav.all':'Все версии',lead:'Лаунчер для Minecraft Java: моды, скины и свой сервер в одном окне.',dl:'Скачать для Windows',loading:'Загружаю данные о версии…',ver:'Версия {v} · {s} · от {d}',portable:'Портативная версия без установки',fail:'Не удалось получить данные о версии. Кнопка откроет страницу релизов.',newIn:'Что нового в {v}',featTitle:'Что умеет',
+ f1t:'Аккаунты',f1d:'Вход через Microsoft или офлайн-профиль. У каждого аккаунта свои миры.',f2t:'Моды',f2d:'Каталог Modrinth. Нужные зависимости, например Fabric API, ставятся сами. Сборки можно отправить другу кодом.',f3t:'Скины и плащи',f3d:'Редактор скина, поиск по нику и гардероб, чтобы быстро переключаться.',f4t:'Свой сервер',f4d:'Создайте сервер Vanilla, Paper или Fabric и откройте его друзьям без VPN.',f5t:'Миры и скриншоты',f5d:'Резервные копии миров, восстановление в один клик и галерея скриншотов.',f6t:'Обновления и языки',f6d:'Лаунчер сам находит новую версию. Интерфейс на русском, украинском, польском и английском.',
+ foot:'NezerLauncher · не связан с Mojang и Microsoft',dsFoot:'Наш Discord',adminLink:'Вход для администратора',dsOnline:'{n} онлайн в Discord',dsJoin:'Присоединиться к Discord',toast:'Вышла новая версия {v}',mb:'МБ',prof:'Профиль',profName:'Выживание с модами',play:'Играть' },
+uk: { 'nav.feat':'Можливості','nav.all':'Усі версії',lead:`Лаунчер для Minecraft Java: моди, скіни та власний сервер в одному вікні.`,dl:'Завантажити для Windows',loading:'Завантажую дані про версію…',ver:'Версія {v} · {s} · від {d}',portable:'Портативна версія без встановлення',fail:'Не вдалося отримати дані про версію. Кнопка відкриє сторінку релізів.',newIn:'Що нового в {v}',featTitle:'Що вміє',
+ f1t:'Акаунти',f1d:'Вхід через Microsoft або офлайн-профіль. Кожен акаунт має власні світи.',f2t:'Моди',f2d:'Каталог Modrinth. Потрібні залежності, наприклад Fabric API, встановлюються самі. Збірками можна ділитися кодом.',f3t:'Скіни та плащі',f3d:'Редактор скіна, пошук за ніком і гардероб для швидкого перемикання.',f4t:'Власний сервер',f4d:'Створіть сервер Vanilla, Paper або Fabric і відкрийте його друзям без VPN.',f5t:'Світи та скриншоти',f5d:'Резервні копії світів, відновлення в один клік і галерея скриншотів.',f6t:'Оновлення та мови',f6d:'Лаунчер сам знаходить нову версію. Інтерфейс російською, українською, польською та англійською.',
+ foot:`NezerLauncher · не пов'язаний з Mojang і Microsoft`,dsFoot:'Наш Discord',adminLink:'Вхід для адміністратора',dsOnline:'{n} онлайн у Discord',dsJoin:'Приєднатися до Discord',toast:'Вийшла нова версія {v}',mb:'МБ',prof:'Профіль',profName:'Виживання з модами',play:'Грати' },
+pl: { 'nav.feat':'Funkcje','nav.all':'Wszystkie wersje',lead:'Launcher do Minecrafta Java: mody, skórki i własny serwer w jednym oknie.',dl:'Pobierz dla Windows',loading:'Wczytuję dane o wersji…',ver:'Wersja {v} · {s} · z dnia {d}',portable:'Wersja przenośna bez instalacji',fail:'Nie udało się pobrać danych o wersji. Przycisk otworzy stronę wydań.',newIn:'Co nowego w {v}',featTitle:'Co potrafi',
+ f1t:'Konta',f1d:'Logowanie przez Microsoft lub profil offline. Każde konto ma własne światy.',f2t:'Mody',f2d:'Katalog Modrinth. Wymagane zależności, na przykład Fabric API, instalują się same. Zestawy modów można przesłać kodem.',f3t:'Skórki i peleryny',f3d:'Edytor skórek, wyszukiwanie po nicku i garderoba do szybkiego przełączania.',f4t:'Własny serwer',f4d:'Utwórz serwer Vanilla, Paper lub Fabric i udostępnij go znajomym bez VPN.',f5t:'Światy i zrzuty ekranu',f5d:'Kopie zapasowe światów, przywracanie jednym kliknięciem i galeria zrzutów ekranu.',f6t:'Aktualizacje i języki',f6d:'Launcher sam znajduje nową wersję. Interfejs po rosyjsku, ukraińsku, polsku i angielsku.',
+ foot:'NezerLauncher · niezwiązany z Mojang ani Microsoft',dsFoot:'Nasz Discord',adminLink:'Logowanie administratora',dsOnline:'{n} online na Discordzie',dsJoin:'Dołącz do Discorda',toast:'Wyszła nowa wersja {v}',mb:'MB',prof:'Profil',profName:'Przetrwanie z modami',play:'Graj' },
+en: { 'nav.feat':'Features','nav.all':'All versions',lead:'A Minecraft Java launcher: mods, skins and your own server in one window.',dl:'Download for Windows',loading:'Loading version info…',ver:'Version {v} · {s} · {d}',portable:'Portable version, no installation',fail:`Couldn't get version info. The button will open the releases page.`,newIn:`What's new in {v}`,featTitle:'What it does',
+ f1t:'Accounts',f1d:'Sign in with Microsoft or use an offline profile. Each account has its own worlds.',f2t:'Mods',f2d:'Modrinth catalog. Required dependencies, such as Fabric API, install themselves. Share modpacks with a code.',f3t:'Skins and capes',f3d:'A skin editor, search by nickname and a wardrobe for quick switching.',f4t:'Your own server',f4d:'Create a Vanilla, Paper or Fabric server and open it to friends without a VPN.',f5t:'Worlds and screenshots',f5d:'World backups, one-click restore and a screenshot gallery.',f6t:'Updates and languages',f6d:'The launcher finds new versions by itself. The interface is in Russian, Ukrainian, Polish and English.',
+ foot:'NezerLauncher · not affiliated with Mojang or Microsoft',dsFoot:'Our Discord',adminLink:'Administrator login',dsOnline:'{n} online on Discord',dsJoin:'Join our Discord',toast:'New version {v} is out',mb:'MB',prof:'Profile',profName:'Survival with mods',play:'Play' }
+};
+const LOC = { ru: 'ru-RU', uk: 'uk-UA', pl: 'pl-PL', en: 'en-US' };
+let lang = ''; try { lang = localStorage.getItem('nl_lang') || ''; } catch {}
+if (!I[lang]) { const n = (navigator.language || '').slice(0, 2).toLowerCase(); lang = I[n] ? n : /^(be|kk)$/.test(n) ? 'ru' : 'en'; }
+const tr = (k, v = {}) => (I[lang][k] || I.ru[k] || k).replace(/\{(\w+)\}/g, (_, x) => v[x] ?? '');
+const mb = (n, u = 'МБ') => (n / 1048576).toFixed(n > 1e8 ? 0 : 1).replace('.', lang === 'en' ? '.' : ',') + ' ' + u;
+const S = { st: 'load' }, DS = {}; let known = null, tt;
+
+function render() {
+  document.documentElement.lang = lang; $('#lang').value = lang;
+  document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = tr(e.dataset.i18n); });
+  const m = $('#meta');
+  if (S.st === 'ok') {
+    const d = new Date(S.date).toLocaleDateString(LOC[lang], { day: 'numeric', month: 'long', year: 'numeric' });
+    m.innerHTML = tr('ver', { v: '<b></b>', s: mb(S.size, tr('mb')), d }); m.querySelector('b').textContent = S.v;
+    $('#nvh').textContent = tr('newIn', { v: S.v });
+  } else m.textContent = tr(S.st === 'fail' ? 'fail' : 'loading');
+  if (CFG.discord) { $('#dsPill span').textContent = DS.on != null ? tr('dsOnline', { n: DS.on }) : tr('dsJoin'); $('#dsPill').classList.toggle('on', DS.on != null); }
+}
+function toast(t) { const e = $('#toast'); e.textContent = t; e.hidden = false; clearTimeout(tt); tt = setTimeout(() => { e.hidden = true; }, 9000); }
+
+$('#dl').href = REL; $('#ghLink').href = 'https://github.com/' + REPO + '/releases';
+if (CFG.discord) { for (const id of ['#discordTop', '#discordFoot', '#dsPill']) { $(id).href = CFG.discord; $(id).hidden = false; } }
+$('#lang').onchange = e => { lang = e.target.value; try { localStorage.setItem('nl_lang', lang); } catch {} render(); };
+
+async function load() {
+  try {
+    const r = await fetch(API + '/releases/latest', { headers: { Accept: 'application/vnd.github+json' } });
+    if (!r.ok) throw 0;
+    const j = await r.json(), exe = (j.assets || []).filter(a => /\.exe$/i.test(a.name));
+    const setup = exe.find(a => /setup/i.test(a.name)) || exe.find(a => !/portable/i.test(a.name)), port = exe.find(a => /portable/i.test(a.name));
+    if (!setup) throw 0;
+    const v = String(j.tag_name || '').replace(/^v/, ''), fresh = known && known !== v;
+    known = v; Object.assign(S, { st: 'ok', v, size: setup.size, date: j.published_at });
+    $('#dl').href = setup.browser_download_url;
+    $('#portable').hidden = !port; if (port) $('#portable').href = port.browser_download_url;
+    const body = (j.body || '').trim(); $('#nb').textContent = body; $('#notes').hidden = !body;
+    if (fresh) toast(tr('toast', { v }));
+  } catch { if (S.st !== 'ok') S.st = 'fail'; }
+  render();
+}
+/* статус Discord: число участников онлайн берётся из ссылки-приглашения */
+const code = (CFG.discord.match(/(?:invite|gg)\/([\w-]+)/) || [])[1];
+async function dsLoad() {
+  if (!code) return;
+  try {
+    const j = await (await fetch('https://discord.com/api/v10/invites/' + code + '?with_counts=true')).json();
+    if (typeof j.approximate_presence_count === 'number') { DS.on = j.approximate_presence_count; render(); }
+  } catch {}
+}
+render(); load(); dsLoad();
+/* новая версия появляется на сайте сама: проверка раз в минуту, пока вкладка открыта */
+setInterval(() => { if (!document.hidden) { load(); dsLoad(); } }, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+
+/* ---- вход владельца и публикация версии ---- */
+let tok = ''; try { tok = sessionStorage.getItem('nl_tok') || ''; } catch {}
+const log = (t, c) => { const d = document.createElement('div'); if (c) d.className = c; d.textContent = t; $('#log').append(d); };
+const gh = (url, o = {}) => fetch(url, { ...o, headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + tok, ...(o.headers || {}) } });
+
+async function check() {
+  $('#log').textContent = '';
+  try {
+    const u = await (await gh('https://api.github.com/user')).json();
+    const r = await gh(API);
+    if (u.login !== CFG.owner || !r.ok) throw 0;
+    try { sessionStorage.setItem('nl_tok', tok); } catch {}
+    $('#auth').hidden = true; $('#pub').hidden = false; log('Вы вошли как ' + u.login + '.', 'k');
+  } catch {
+    tok = ''; try { sessionStorage.removeItem('nl_tok'); } catch {}
+    log('Токен не подошёл. Нужен токен аккаунта ' + CFG.owner + ' с доступом к ' + CFG.repo + '.', 'e');
+  }
+}
+$('#adminBtn').onclick = () => { $('#admin').hidden = false; $('#admin').scrollIntoView({ behavior: 'smooth' }); if (tok && !$('#auth').hidden) check(); };
+if (location.hash === '#admin') $('#adminBtn').click();
+$('#login').onclick = () => { tok = $('#tok').value.trim(); $('#tok').value = ''; if (tok) check(); };
+
+$('#go').onclick = async () => {
+  const v = $('#ver').value.trim().replace(/^v/i, ''), files = [...$('#files').files], go = $('#go');
+  $('#log').textContent = '';
+  if (!/^\d+\.\d+\.\d+/.test(v)) return log('Введите номер версии, например 1.4.4.', 'e');
+  if (!files.some(f => f.name === 'latest.yml')) return log('Добавьте latest.yml: без него лаунчеры не увидят обновление.', 'e');
+  if (!files.some(f => /\.exe$/i.test(f.name))) return log('Добавьте установщик .exe.', 'e');
+  go.disabled = true;
+  try {
+    log('Создаю черновик релиза v' + v + '…');
+    const r = await gh(API + '/releases', { method: 'POST', body: JSON.stringify({ tag_name: 'v' + v, name: 'NezerLauncher v' + v, body: $('#notes2').value, draft: true }) });
+    if (!r.ok) throw new Error(r.status === 403 || r.status === 404 ? 'GitHub отказал (' + r.status + '): у токена нет права Contents: Read and write.' : 'GitHub ответил ' + r.status + '.');
+    const rel = await r.json();
+    for (const f of files) {
+      const name = f.name.replace(/\s+/g, '-');               // как у electron-builder: пробелы заменяются на дефисы
+      log('Загружаю ' + name + ' (' + mb(f.size) + ')…');
+      const u = await gh('https://uploads.github.com/repos/' + REPO + '/releases/' + rel.id + '/assets?name=' + encodeURIComponent(name), { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: f });
+      if (!u.ok) throw new Error('Файл ' + name + ' не загрузился (' + u.status + ').');
+    }
+    log('Публикую…');
+    const p = await gh(API + '/releases/' + rel.id, { method: 'PATCH', body: JSON.stringify({ draft: false, make_latest: 'true' }) });
+    if (!p.ok) throw new Error(p.status === 422 ? 'Версия v' + v + ' уже существует. Увеличьте номер.' : 'Не удалось опубликовать (' + p.status + ').');
+    log('Готово: версия ' + v + ' опубликована. Лаунчеры у пользователей обновятся сами.', 'k'); load();
+  } catch (e) {
+    log(e instanceof TypeError ? 'Ошибка сети. Черновик мог остаться на GitHub: откройте Releases и допубликуйте его вручную.' : e.message, 'e');
+  } finally { go.disabled = false; }
+};
+</script>
+</body>
+</html>
